@@ -25,6 +25,7 @@
 
 - **`Idris2-Multiset-Core`**
 - **`Idris2-Multiset-Transform`**
+- **`Idris2-Geometry`**
 - **`Idris2-Physics`**
 - **`Idris2-Hadron`**
 - **`Idris2-Chemistry`**
@@ -33,10 +34,11 @@
 
 ## Building & Usage
 
-Build the package using `pack`:
+Build the package using `idris2`:
 
 ```bash
-pack build Idris2-Biology.ipkg
+idris2 --build Idris2-Biology.ipkg
+idris2 --install Idris2-Biology.ipkg
 ```
 
 ---
