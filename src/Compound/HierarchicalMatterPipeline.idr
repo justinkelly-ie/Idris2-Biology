@@ -1,5 +1,7 @@
 module Compound.HierarchicalMatterPipeline
 
+import Language.Reflection
+import Math.Singleton.Bit
 import Core.BoxInt
 import Core.Multiset
 import Core.VexelMaxel
@@ -60,6 +62,17 @@ scaleMassConservation : (tokenCounts : List BoxInt) -> (compositeTokens : BoxInt
 scaleMassConservation constituents composite =
   let totalConstituents = foldl (\acc, x => acc + x) (intToBoxInt 0) constituents
   in totalConstituents == composite
+
+public export
+sumMultisetTokens : Multiset BoxInt BoxInt -> BoxInt
+sumMultisetTokens ZeroM = intToBoxInt 0
+sumMultisetTokens (AddM elem count rest) = elem * count + sumMultisetTokens rest
+
+||| Multiset-native Scale-Invariant Mass Conservation.
+public export
+scaleMassConservationMultiset : (tokenCounts : Multiset BoxInt BoxInt) -> (compositeTokens : BoxInt) -> Bit
+scaleMassConservationMultiset constituents composite =
+  boolToBit (sumMultisetTokens constituents == composite)
 
 ||| Universal Theorem 2: Monotonic Law Ledger Increment.
 ||| Proves that every epoch cycle adds exactly 1 historical remainder constraint
@@ -186,5 +199,19 @@ auditHierarchicalMatterAscentProof =
 public export
 proofOf7PhaseMatterAscent : Bool
 proofOf7PhaseMatterAscent = auditHierarchicalMatterAscentProof
+
+public export
+auditHierarchicalMatterAscentProofBit : Bit
+auditHierarchicalMatterAscentProofBit = boolToBit auditHierarchicalMatterAscentProof
+
+public export
+proofOf7PhaseMatterAscentBit : Bit
+proofOf7PhaseMatterAscentBit = boolToBit proofOf7PhaseMatterAscent
+
+export
+%macro
+auditHierarchicalMatterAscent : Elab (Compound.HierarchicalMatterPipeline.auditHierarchicalMatterAscentProof = True)
+auditHierarchicalMatterAscent = pure Refl
+
 
 

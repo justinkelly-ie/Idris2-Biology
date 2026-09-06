@@ -1,5 +1,7 @@
 module Compound.UniversalAlgebraTRS
 
+import Language.Reflection
+import Math.Singleton.Bit
 import Core.BoxInt
 import Core.Multiset
 import Core.VexelMaxel
@@ -262,6 +264,10 @@ soundnessProofForTerm : (t : MatterTerm) -> Bool
 soundnessProofForTerm t =
   evalMassTokens t == evalMassTokens (normalizeMatter t)
 
+public export
+soundnessProofForTermBit : (t : MatterTerm) -> Bit
+soundnessProofForTermBit t = boolToBit (soundnessProofForTerm t)
+
 ||| Master Compile-Time Audit Proof:
 ||| Verifies:
 ||| 1. Proton reduction soundness: (9 + 9 + 9 = 27).
@@ -278,5 +284,15 @@ auditUniversalAlgebraSoundnessProof =
   (intToBoxInt 324 == intToBoxInt 324) &&
   (intToBoxInt 432 == intToBoxInt 432) &&
   (intToBoxInt 486 == intToBoxInt 486)
+
+public export
+auditUniversalAlgebraSoundnessProofBit : Bit
+auditUniversalAlgebraSoundnessProofBit = boolToBit auditUniversalAlgebraSoundnessProof
+
+export
+%macro
+auditUniversalAlgebraSoundness : Elab (Compound.UniversalAlgebraTRS.auditUniversalAlgebraSoundnessProof = True)
+auditUniversalAlgebraSoundness = pure Refl
+
 
 
