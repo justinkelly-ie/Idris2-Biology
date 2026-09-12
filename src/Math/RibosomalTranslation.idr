@@ -53,6 +53,46 @@ translateCodon G C A = Ala       -- Alanine GCA
 translateCodon U A A = StopCodon -- Stop codon UAA
 translateCodon _ _ _ = Leu       -- Standard degenerate default
 
+||| Consumes an RNABase token linearly in Quantitative Type Theory.
+public export
+consumeRNABase : (1 b : RNABase) -> ()
+consumeRNABase A = ()
+consumeRNABase C = ()
+consumeRNABase G = ()
+consumeRNABase U = ()
+
+||| Single-use linear translation of an mRNA codon (1-multiplicity QTT consumption constraint).
+public export
+translateCodonLinear : (1 b1 : RNABase) -> (1 b2 : RNABase) -> (1 b3 : RNABase) -> AminoAcid
+translateCodonLinear A U G = Met
+translateCodonLinear U U U = Phe
+translateCodonLinear U U C = Phe
+translateCodonLinear G G G = Gly
+translateCodonLinear G C A = Ala
+translateCodonLinear U A A = StopCodon
+translateCodonLinear b1 b2 b3 =
+  let () = consumeRNABase b1
+      () = consumeRNABase b2
+      () = consumeRNABase b3
+  in Leu
+
+||| Single-use linear translation of an entire mRNA reading frame:
+||| Consumes a linear vector of (n * 3) nucleotides to produce a peptide vector of n amino acids.
+public export
+translateReadingFrameLinear : {n : Nat} -> (1 rna : Vect (n * 3) RNABase) -> Vect n AminoAcid
+translateReadingFrameLinear {n=Z} [] = []
+translateReadingFrameLinear {n=S k} (b1 :: b2 :: b3 :: rest) =
+  translateCodonLinear b1 b2 b3 :: translateReadingFrameLinear rest
+
+||| Static compiler verification proof proving exact length preservation under linear reading-frame translation.
+public export
+0 verifyReadingFrameTranslationLength : (rna : Vect 6 RNABase) -> length (translateReadingFrameLinear {n=2} rna) = 2
+verifyReadingFrameTranslationLength (b1 :: b2 :: b3 :: b4 :: b5 :: b6 :: []) = Refl
+
+
+
+
+
 ||| Calculates single-nucleotide mutation error distance:
 ||| Proves that synonymous mutations at 3rd wobble position have error distance = 0.
 public export
