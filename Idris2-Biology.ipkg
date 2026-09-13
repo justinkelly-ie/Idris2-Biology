@@ -4,11 +4,8 @@ authors = "Justin Kelly"
 brief   = "Layer 5b Biological Systems & Active Inference Neural Network Library."
 
 depends = base
-        , Idris2-Multiset-Core
-        , Idris2-Multiset-Transform
-        , Idris2-Physics
-        , Idris2-Hadron
         , Idris2-Chemistry
+        , Idris2-Physics
 
 sourcedir = "src"
 

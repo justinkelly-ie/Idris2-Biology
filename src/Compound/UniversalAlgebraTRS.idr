@@ -8,10 +8,6 @@ import Core.VexelMaxel
 import Core.UnixelFraction
 import Math.FourGeometries
 import Math.ExclusionPrinciple
-import Compound.HadronicConfinement
-import Compound.AlphaReplication
-import Compound.QuarkHadronAlgebra
-import Compound.TypeIndexedMultiset
 import Compound.HierarchicalMatterPipeline
 import Core.UniverseState
 import Data.List
@@ -23,6 +19,31 @@ import Data.Vect
 ------------------------------------------------------------------------
 -- 1. MULTI-SORTED ALGEBRAIC SYNTAX (THE ARCHITECT)
 ------------------------------------------------------------------------
+
+||| Fundamental Quark Flavor Specification.
+public export
+data QuarkSpec = UpQuark | DownQuark | StrangeQuark | CharmQuark | BottomQuark | TopQuark
+
+public export
+Eq QuarkSpec where
+  UpQuark      == UpQuark      = True
+  DownQuark    == DownQuark    = True
+  StrangeQuark == StrangeQuark = True
+  CharmQuark   == CharmQuark   = True
+  BottomQuark  == BottomQuark  = True
+  TopQuark     == TopQuark     = True
+  _            == _            = False
+
+||| Chromogeometric Color Charge Sector.
+public export
+data ColorSector = ColorRed | ColorGreen | ColorBlue
+
+public export
+Eq ColorSector where
+  ColorRed   == ColorRed   = True
+  ColorGreen == ColorGreen = True
+  ColorBlue  == ColorBlue  = True
+  _          == _          = False
 
 ||| Leptonic particle species.
 public export

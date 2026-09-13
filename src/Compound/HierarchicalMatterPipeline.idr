@@ -8,12 +8,6 @@ import Core.VexelMaxel
 import Core.UnixelFraction
 import Math.FourGeometries
 import Math.ExclusionPrinciple
-import Compound.HadronicConfinement
-import Compound.AlphaReplication
-import Compound.QuarkHadronAlgebra
-import Compound.TypeIndexedMultiset
-import Compound.StellarNucleosynthesis
-import Compound.PlasmaRecombination
 import Compound.MolecularBonding
 import Compound.HydrogenBonding
 import Compound.WatsonCrickBasePairing
