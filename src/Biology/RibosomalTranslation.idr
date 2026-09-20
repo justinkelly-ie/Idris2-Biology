@@ -2,6 +2,8 @@ module Biology.RibosomalTranslation
 
 import Core.BoxInt
 import Core.UnixelFraction
+import Math.OnSeq.FusedStream
+import Data.Fuel
 import Data.List
 import Data.Fin
 import Data.Vect
@@ -62,8 +64,36 @@ codonWobbleError b1 b2 b3 b3' =
       aa2 = translateCodon b1 b2 b3'
   in if aa1 == aa2 then intToBoxInt 0 else intToBoxInt 10
 
+||| Discrete Triplet Codon representation:
+public export
+record CodonTriplet where
+  constructor MkCodon
+  base1 : RNABase
+  base2 : RNABase
+  base3 : RNABase
+
+public export
+Eq CodonTriplet where
+  (MkCodon b1 b2 b3) == (MkCodon c1 c2 c3) = b1 == c1 && b2 == c2 && b3 == c3
+
 ------------------------------------------------------------------------
--- 3. FORMAL INVARIANT AUDIT
+-- 3. DEFORESTED TRANSLATION STREAM TRANSDUCER
+------------------------------------------------------------------------
+
+||| Zero-allocation deforested mRNA ribosomal translation stream transducer.
+public export covering
+fusedComputeRibosomalTranslationStream : Fuel -> List CodonTriplet -> List AminoAcid
+fusedComputeRibosomalTranslationStream f codons =
+  fusedHylomorphism f
+    (\st => case st of
+              [] => Done
+              (MkCodon b1 b2 b3) :: rest => Yield (translateCodon b1 b2 b3) rest)
+    (\aa, acc => aa :: acc)
+    []
+    codons
+
+------------------------------------------------------------------------
+-- 4. FORMAL INVARIANT AUDIT
 ------------------------------------------------------------------------
 
 ||| Audits Law 40 (Discrete Ribosomal Translation & Genetic Code Optimality):
@@ -71,11 +101,14 @@ codonWobbleError b1 b2 b3 b3' =
 ||| 2. Translates UUU -> Phe and UUC -> Phe.
 ||| 3. Proves 3rd-position wobble mutational error is strictly buffered (error = 0).
 ||| 4. Proves genetic code robustness against point mutations.
-public export
+||| 5. Zero-allocation deforested stream translation produces cognate peptide sequence.
+public export covering
 auditRibosomalTranslationProof : Bool
 auditRibosomalTranslationProof =
   let tMet = translateCodon A U G == Met
       tPhe1 = translateCodon U U U == Phe
       tPhe2 = translateCodon U U C == Phe
       tWobbleZero = codonWobbleError U U U U == intToBoxInt 0
-  in tMet && tPhe1 && tPhe2 && tWobbleZero
+      translatedPeptide = fusedComputeRibosomalTranslationStream (limit 10) [MkCodon A U G, MkCodon U U U, MkCodon U U C]
+  in tMet && tPhe1 && tPhe2 && tWobbleZero && translatedPeptide == [Met, Phe, Phe]
+

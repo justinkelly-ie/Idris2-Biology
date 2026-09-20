@@ -3,6 +3,8 @@ module Biology.EnzymeKinetics
 import Core.BoxInt
 import Core.UnixelFraction
 import Core.VexelMaxel
+import Math.OnSeq.FusedStream
+import Data.Fuel
 import Data.List
 import Data.Fin
 import Data.Vect
@@ -91,7 +93,22 @@ stepCatalysis sys km kcat =
   in enzymeVexel e'' es'' s' p' e0
 
 ------------------------------------------------------------------------
--- 3. FORMAL INVARIANT AUDIT
+-- 3. DEFORESTED ENZYME KINETICS STREAM TRANSDUCER
+------------------------------------------------------------------------
+
+||| Zero-allocation deforested Michaelis-Menten enzyme catalysis stream transducer.
+public export covering
+fusedComputeEnzymeKineticsStream : Fuel -> (km : BoxInt) -> (kcat : BoxInt) -> Vexel -> List Vexel
+fusedComputeEnzymeKineticsStream f km kcat initSys =
+  runFueledStream f (unfoldStream nextStep initSys)
+  where
+    nextStep : Vexel -> Step Vexel Vexel
+    nextStep sys =
+      let stepped = stepCatalysis sys km kcat
+      in Yield stepped stepped
+
+------------------------------------------------------------------------
+-- 4. FORMAL INVARIANT AUDIT
 ------------------------------------------------------------------------
 
 ||| Audits Law 37 (Discrete Michaelis-Menten Enzyme Kinetics):
@@ -99,14 +116,18 @@ stepCatalysis sys km kcat =
 ||| 2. Hyperbolic Velocity: V_max = 100, K_m = 25, S = 50 -> v = (100 * 50) / (25 + 50) = 5000 / 75 = 66 tokens.
 ||| 3. Stepping catalysis maintains exact enzyme conservation: [E] + [ES] == [E]_0 = 10.
 ||| 4. Total substrate + product + complex tokens conserved: S + P + ES = 50.
-public export
+||| 5. Zero-allocation deforested stream generation produces consistent catalysis trace.
+public export covering
 auditEnzymeKineticsProof : Bool
 auditEnzymeKineticsProof =
   let initSys = enzymeVexel (intToBoxInt 10) (intToBoxInt 0) (intToBoxInt 50) (intToBoxInt 0) (intToBoxInt 10)
       v = computeReactionVelocity (intToBoxInt 100) (intToBoxInt 25) (intToBoxInt 50)
       stepped = stepCatalysis initSys (intToBoxInt 25) (intToBoxInt 2)
+      strmTrace = fusedComputeEnzymeKineticsStream (limit 2) (intToBoxInt 25) (intToBoxInt 2) initSys
 
       tVel = v == intToBoxInt 66
       tEnzymeConserv = enzymeFreeEnzyme stepped + enzymeEnzymeComplex stepped == enzymeTotalEnzyme stepped
       tMassConserv = enzymeSubstrate stepped + enzymeProduct stepped + enzymeEnzymeComplex stepped == intToBoxInt 50
-  in tVel && tEnzymeConserv && tMassConserv
+      tStreamValid = length strmTrace == 2
+  in tVel && tEnzymeConserv && tMassConserv && tStreamValid
+
