@@ -2,6 +2,8 @@ module Biology.ActionPotentialKinetics
 
 import Core.BoxInt
 import Core.UnixelFraction
+import Math.OnSeq.FusedStream
+import Data.Fuel
 import Data.List
 import Data.Fin
 import Data.Vect
@@ -75,3 +77,21 @@ auditActionPotentialKineticsProof =
       tSpikeUp = voltage spike1 > intToBoxInt 0
       tRepolarize = voltage spike2 < voltage spike1
   in tSpikeUp && tRepolarize
+
+------------------------------------------------------------------------
+-- 4. DEFORESTED ACTION POTENTIAL KINETIC STREAMS
+------------------------------------------------------------------------
+
+||| Zero-allocation action potential simulation accumulating total membrane voltage flux using fusedHylomorphism.
+public export covering
+fusedComputeMembraneVoltageFlux : Data.Fuel.Fuel -> NeuronMembrane -> List BoxInt -> BoxInt
+fusedComputeMembraneVoltageFlux f initialNeuron currents =
+  Math.OnSeq.FusedStream.fusedHylomorphism f
+    (\(n, currs) => case currs of
+                      [] => Done
+                      inj :: rest =>
+                        let n' = stepActionPotential n inj
+                        in Yield (voltage n') (n', rest))
+    (\v, acc => v + acc)
+    (intToBoxInt 0)
+    (initialNeuron, currents)
