@@ -1,0 +1,17 @@
+module Biology
+
+import public Biology.ActionPotentialKinetics
+import public Biology.AllostericCooperativity
+import public Biology.EnzymeKinetics
+import public Biology.RibosomalTranslation
+import public Compound.ActiveInferenceNeuralNetwork
+import public Compound.BiologyScaleTransforms
+import public Compound.BiophysicalAggregation
+import public Compound.HierarchicalMatterPipeline
+import public Compound.UniversalAlgebraTRS
+import public Math.ActionPotentialKinetics
+import public Math.AllostericCooperativity
+import public Math.EnzymeKinetics
+import public Math.RibosomalTranslation
+
+%default total

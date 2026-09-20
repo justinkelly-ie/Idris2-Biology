@@ -6,7 +6,8 @@ brief   = "Layer 5b Biological Systems & Active Inference Neural Network Library
 depends = Idris2-Chemistry, Idris2-Geometry, Idris2-Multiset-Core, Idris2-Multiset-Transform, Idris2-Physics, base, linear
 sourcedir = "src"
 
-modules = Biology.ActionPotentialKinetics,
+modules = Biology,
+          Biology.ActionPotentialKinetics,
           Biology.AllostericCooperativity,
           Biology.EnzymeKinetics,
           Biology.RibosomalTranslation,

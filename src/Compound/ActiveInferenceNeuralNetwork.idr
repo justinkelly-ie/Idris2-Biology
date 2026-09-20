@@ -1,11 +1,7 @@
 module Compound.ActiveInferenceNeuralNetwork
 
-import Core.BoxInt
-import Core.Multiset
-import Core.VexelMaxel
-import Core.UnixelFraction
-import Core.TransformMultiset
-import Core.Category.Adjunction
+import Core
+import Transform
 import Data.List
 import Math.OnSeq.FusedStream
 import Data.Fuel

@@ -2,11 +2,9 @@ module Compound.HierarchicalMatterPipeline
 
 import Language.Reflection
 import Math.Singleton.Bit
-import Core.BoxInt
-import Core.Multiset
-import Core.VexelMaxel
-import Core.UnixelFraction
-import Math.FourGeometries
+import Core
+import Transform
+import Core
 import Math.ExclusionPrinciple
 import Math.ChromoCategory
 import Math.ChromoLawFunctor

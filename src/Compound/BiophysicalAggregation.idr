@@ -1,10 +1,7 @@
 module Compound.BiophysicalAggregation
 
-import Core.BoxInt
-import Core.Multiset
-import Core.UnixelFraction
-import Core.TransformMultiset
-import Math.LawAlgebra
+import Core
+import Transform
 import Math.NucleicAcidBasePairing
 import Math.MacromolecularChirality
 import Data.List
@@ -42,7 +39,7 @@ record PeptideChain where
 
 ||| DNA Double Helix Transform Multiset (G ⊗ Z ⊗ J)
 public export
-dnaDoubleHelixTransform : TransformMultiset DnaBasePair DnaBasePair
+dnaDoubleHelixTransform : MaxelTransform DnaBasePair DnaBasePair
 dnaDoubleHelixTransform = mkTransformBox EllipticSector unitUnixelFraction
   [ ((MkBasePair Adenine Thymine, MkBasePair Adenine Thymine), intToBoxInt 1)
   , ((MkBasePair Guanine Cytosine, MkBasePair Guanine Cytosine), intToBoxInt 1)
@@ -50,7 +47,7 @@ dnaDoubleHelixTransform = mkTransformBox EllipticSector unitUnixelFraction
 
 ||| Peptide Chain Transform Multiset (G ⊗ Z ⊗ J)
 public export
-peptideChainTransform : TransformMultiset EnantiomerHand EnantiomerHand
+peptideChainTransform : MaxelTransform EnantiomerHand EnantiomerHand
 peptideChainTransform = mkTransformBox EllipticSector unitUnixelFraction
   [ ((LHand, LHand), intToBoxInt 1)
   , ((DHand, DHand), intToBoxInt 1)
