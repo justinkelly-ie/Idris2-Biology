@@ -1,11 +1,11 @@
-# Idris2-Biology
+# FinSc-Biology
 
 [![Idris 2 Verification](https://img.shields.io/badge/Idris_2-0.8.0-blue.svg)](https://www.idris-lang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **Layer 6 Hierarchical Biological Systems, Term Rewriting Systems & Active Inference for Idris 2**
 
-`Idris2-Biology` forms **Layer 6** of the 10-layer constructive non-linear multiset science framework. It formalizes hierarchical matter ascent pipelines (`HierarchicalMatterPipeline`), biological scale transformations (`transformMoleculeToBiomodule`), Term Rewriting System (TRS) universal algebra confluence provers, active inference neural networks ($\Delta F \le 0$), Hodgkin-Huxley action potential kinetics, and Michaelis-Menten enzyme kinetics.
+`FinSc-Biology` forms **Layer 6** of the 10-layer constructive non-linear multiset science framework. It formalizes hierarchical matter ascent pipelines (`HierarchicalMatterPipeline`), biological scale transformations (`transformMoleculeToBiomodule`), Term Rewriting System (TRS) universal algebra confluence provers, active inference neural networks ($\Delta F \le 0$), Hodgkin-Huxley action potential kinetics, and Michaelis-Menten enzyme kinetics.
 
 ---
 
@@ -35,8 +35,8 @@
 ## 🚀 Building & Installing
 
 ```bash
-idris2 --build Idris2-Biology.ipkg
-idris2 --install Idris2-Biology.ipkg
+idris2 --build FinSc-Biology.ipkg
+idris2 --install FinSc-Biology.ipkg
 ```
 
 ---
